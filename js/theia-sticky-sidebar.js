@@ -18,7 +18,8 @@
             'minWidth': 0,
             'disableOnResponsiveLayouts': true,
             'sidebarBehavior': 'modern',
-            'defaultPosition': 'relative'
+            'defaultPosition': 'relative',
+            'namespace': 'TSS'
         };
         options = $.extend(defaults, options);
 
@@ -35,7 +36,7 @@
             if (!success) {
                 console.log('TSS: Body width smaller than options.minWidth. Init is delayed.');
 
-                $(document).scroll(function (options, $that) {
+                $(document).on('scroll.' + options.namespace, function (options, $that) {
                     return function (evt) {
                         var success = tryInit(options, $that);
 
@@ -44,7 +45,7 @@
                         }
                     };
                 }(options, $that));
-                $(window).resize(function (options, $that) {
+                $(window).on('resize.' + options.namespace, function (options, $that) {
                     return function (evt) {
                         var success = tryInit(options, $that);
 
@@ -298,12 +299,12 @@
                 o.onScroll(o);
 
                 // Recalculate the sidebar's position on every scroll and resize.
-                $(document).scroll(function (o) {
+                $(document).on('scroll.' + o.options.namespace, function (o) {
                     return function () {
                         o.onScroll(o);
                     };
                 }(o));
-                $(window).resize(function (o) {
+                $(window).on('resize.' + o.options.namespace, function (o) {
                     return function () {
                         o.stickySidebar.css({'position': 'static'});
                         o.onScroll(o);
@@ -335,21 +336,23 @@
                 }
             });
         }
-        
+
         function getWidthForObject(object) {
             var width;
-            
+
             try {
                 width = object[0].getBoundingClientRect().width;
             }
             catch(err) {
             }
-            
+
             if (typeof width === "undefined") {
                 width = object.width();
             }
-            
+
             return width;
         }
+
+        return this;
     }
 })(jQuery);
