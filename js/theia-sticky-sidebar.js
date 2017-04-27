@@ -19,7 +19,8 @@
             'disableOnResponsiveLayouts': true,
             'sidebarBehavior': 'modern',
             'defaultPosition': 'relative',
-            'namespace': 'TSS'
+            'namespace': 'TSS',
+            'storeFn': null
         };
         options = $.extend(defaults, options);
 
@@ -84,6 +85,10 @@
 
             $that.each(function () {
                 var o = {};
+
+                if (options.storeFn) {
+                    options.storeFn(o);
+                }
 
                 o.sidebar = $(this);
 
